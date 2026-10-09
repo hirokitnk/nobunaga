@@ -94,6 +94,23 @@ export function reinforcementCandidates(s, defClan, target) {
   return out;
 }
 
+// 出陣前の勝算の目安（守備側の城の補正と援軍の可能性を含む）
+export function battleOdds(s, clan, target, gens) {
+  const t = s.castles[target];
+  const att = gens.reduce((a, g) => a + genPower(g), 0);
+  if (t.owner < 0 || !castleGens(s, target).some((g) => g.troops > 0)) return { ratio: 99, label: '無人', cls: 'good' };
+  let reinf = 0;
+  for (const a of t.adj) {
+    if (s.castles[a].owner !== t.owner) continue;
+    const gs = castleGens(s, a).filter((g) => !g.acted && g.troops >= 300);
+    for (const g of gs.slice(1)) reinf += genPower(g);
+  }
+  const def = castleDefensePower(s, target) + reinf * 0.5;
+  const ratio = att / Math.max(1, def);
+  const [label, cls] = ratio >= 2 ? ['圧倒的優勢', 'good'] : ratio >= 1.4 ? ['優勢', 'good'] : ratio >= 1 ? ['互角', 'warn'] : ratio >= 0.7 ? ['劣勢', 'bad'] : ['無謀', 'bad'];
+  return { ratio, label, cls };
+}
+
 const dirFrom = (s, from, to) => [s.castles[from].x - s.castles[to].x, s.castles[from].y - s.castles[to].y];
 
 // 出陣。ctx.battle が与えられ、プレイヤーが関わる合戦なら UI に委ねる
@@ -101,7 +118,9 @@ export async function launchAttack(s, ctx, clan, target, gids) {
   const err = validateAttack(s, clan, target, gids);
   if (err) return { ok: false, msg: err };
   const t = s.castles[target];
-  const attackers = gids.map((id) => s.gens[id]);
+  // 総大将は身分の最も高い武将（大名が出陣していれば大名）
+  const dm = s.clans[clan].daimyo;
+  const attackers = gids.map((id) => s.gens[id]).sort((a, b) => (b.id === dm) - (a.id === dm) || b.rank - a.rank || b.war - a.war);
   s.clans[clan].rice -= riceForSortie(attackers);
   for (const g of attackers) g.acted = true;
   const defClan = t.owner;

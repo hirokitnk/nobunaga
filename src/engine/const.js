@@ -9,7 +9,9 @@ export const MERIT_REQ = [0, 200, 600, 1300, 2500]; // 昇進に必要な勲功
 
 export const UNIT_NAMES = ['足軽', '騎馬', '鉄砲'];
 export const UNIT_SHORT = ['足', '騎', '鉄'];
-export const ASHIGARU = 0, CAVALRY = 1, GUNNER = 2;
+export const ASHIGARU = 0;
+export const CAVALRY = 1;
+export const GUNNER = 2;
 
 export const COST = {
   develop: 40, // 開墾・商業・築城 1回あたりの金

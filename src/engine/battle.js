@@ -2,7 +2,8 @@
 import { rnd, makeRng } from './rng.js';
 import { ASHIGARU, CAVALRY, GUNNER } from './const.js';
 
-export const BW = 17, BH = 13;
+export const BW = 17;
+export const BH = 13;
 export const T = { PLAIN: 0, FOREST: 1, HILL: 2, MOUNT: 3, RIVER: 4, CASTLE: 5, HONMARU: 6, WALL: 7, GATE: 8, BREACH: 9 };
 export const T_NAMES = ['平地', '森', '丘', '山', '川', '城内', '本丸', '城壁', '城門', '破れ門'];
 const MOVE_COST = [
