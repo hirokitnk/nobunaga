@@ -1,0 +1,14 @@
+{
+  "name": "tenshouki-remake",
+  "version": "0.1.0",
+  "description": "信長の野望・天翔記 風 戦国シミュレーション（非公式ファンリメイク）",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "npx --yes http-server -c-1 -p 8080 .",
+    "test": "node --test test/*.test.mjs",
+    "build": "node tools/build.mjs",
+    "gen:adjacency": "node tools/gen-adjacency.mjs"
+  },
+  "license": "MIT"
+}
